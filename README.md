@@ -15,6 +15,8 @@ Deliberate Engineering works best in small enough teams where ownership is real,
 
 An agent given a vague instruction by a confused developer produces confident, fast, wrong code. Your job is increasingly to think clearly, plan deliberately, direct precisely, and review critically. The principles below are not just about writing code. They are about working effectively as the intelligence that guides and corrects the machine.
 
+The difficulty is compounded by the discourse surrounding these tools. A steady drumbeat of AI executives and investors — many with undeclared financial stakes in adoption — produce emotionally manipulative, algorithmically optimized content: existential framing, identity threat, urgency dressed as public service. It is designed to go viral, and it does. Deliberate Engineering is in part a response to this: a reasoned position derived from principles, not a reaction to fear or hype. The developer who panics into the slop loop and the developer who retreats into sceptical rejection have both been moved by the same external force. Neither is thinking clearly.
+
 ```
 Plan.
 Instruct.
