@@ -35,6 +35,12 @@ Keep your energy on what requires a human mind. Steer by adding the business con
 
 A codebase is the materialized collective mental model — and accumulated confusion and artifact of the misunderstandings — of everyone who built it. Before writing a line — or instructing an agent — build yours. Trace the data. Follow the flow. Know *why* the system behaves as it does, not just *that* it does. Know what you know and know what you don't know. There is usually a significant cost to not-knowing or not-understanding. Unexamined gaps don't stay neutral — they become assumptions, assumptions become wrong conclusions, wrong conclusions become either endless iterations that never solve the bug, or new bugs shipped.
 
+In agentic coding, this is empirically grounded. Large-scale analysis across 60,000 agent trajectories shows that runs diverge within the first 1% of tokens: a single word difference in early reasoning cascades into fundamentally different solution strategies, frequently with opposite outcomes (Bjarnason, Silva & Monperrus, *[On Randomness in Agentic Evals](https://arxiv.org/abs/2602.07150)*, arXiv:2602.07150, 2026). Your instruction seeds the trajectory. Vague input doesn't produce vague output — it produces a confidently wrong path, locked in early, that no downstream review fully recovers.
+
+This is the mechanical indictment of the slop loop: spinning up armies of agents on a poorly understood problem doesn't multiply your chances of success — it multiplies your trajectories of confident wrongness, burning through endless tokens and benefitting mostly the AI provider.
+
+Therefore: before instructing an agent, require it to demonstrate understanding first — restate the problem, trace the relevant code paths, surface what it doesn't know. An agent that cannot articulate the problem clearly has already diverged.
+
 *Stop throwing spaghetti at the wall and watching what sticks.*
 
 ---
