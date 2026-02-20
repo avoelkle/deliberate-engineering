@@ -69,7 +69,17 @@ You don't yet fully know what the solution needs to be — and this is not a wea
 
 ### 4. Your Code Is a Message to the Future
 
-You are not writing for the machine. You are writing for the person — possibly yourself — who will read this under pressure, two years from now, with no context. A clever solution that requires reverse-engineering your mental model is not clever. A clear solution that makes the mental model obvious is the hard thing, and the right thing. This applies equally to what you instruct an agent to produce: if you wouldn't accept it from a colleague, don't accept it from an agent.
+Principles 1 and 3 can be applied to the code itself.
+
+Principle 1 says: build a mental model before you act. Principle 3 says: keep complexity from accumulating silently. Principle 4 is looking at code from the reader's perspective — the person — or the agent instructed to extend it — who arrives at this code later, under pressure (human) or with not enough context (agent), and has to build that mental model from scratch.
+
+You are writing for that person — and possibly yourself. A clever solution that requires reverse-engineering your reasoning is not clever. A clear solution that makes the mental model obvious is the hard thing, and the right thing. Every unnecessary abstraction, every unexplained indirection, every piece of complexity that wasn't earned by necessity is cognitive load you are handing to someone else without their consent.
+
+Sounds like clean code? Not quite. Clean code is focused on surface: naming conventions, formatting, short functions, self-documenting code, readability as prose. Rule-based and prescriptive. The question it answers: *does this code look right?*
+
+The approach here is more in line with Simple Code (John Ousterhout, *A Philosophy of Software Design*): primarily about structure — reducing cognitive load, managing dependencies and obscurity, designing deep modules with simple interfaces that hide complex implementations. The question it answers: *how much does a developer need to hold in their head to work on this?*
+
+In short: clean code is about how code looks. Simple code is about how complexity behaves.
 
 *The mental model should be in the code, not in your head. If it needs explaining, it needs rewriting.*
 
