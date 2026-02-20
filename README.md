@@ -17,6 +17,8 @@ An agent given a vague instruction by a confused developer produces confident, f
 
 The difficulty is compounded by the discourse surrounding these tools. A steady drumbeat of AI executives and investors — many with undeclared financial stakes in adoption — produce emotionally manipulative, algorithmically optimized content: existential framing, identity threat, urgency dressed as public service. It is designed to go viral, and it does. Deliberate Engineering is in part a response to this: a reasoned position derived from principles, not a reaction to fear or hype. The developer who panics into the slop loop and the developer who retreats into sceptical rejection have both been moved by the same external force. Neither is thinking clearly.
 
+This guide was developed in the way it recommends. A coding agent was used throughout — for research, drafting, critique, and iteration — but every direction, pushback, and editorial judgment came from the human in the loop. The trajectory was seeded deliberately, at every step that mattered. The process and the product are consistent with each other. The output is evidence of the method.
+
 ```
 Plan.
 Instruct.
