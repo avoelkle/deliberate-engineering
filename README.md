@@ -5,7 +5,7 @@
 
 ## Preface
 
-> **Remark:** This is intentionally detailed. You can skip directly to the six principles below but you may want to come back to the preface later — it makes the reasoning behind the principles traceable, not just the principles themselves.
+> **Remark:** This is intentionally detailed. You can skip directly to the seven principles below but you may want to come back to the preface later — it makes the reasoning behind the principles traceable, not just the principles themselves.
 
 The way we work is changing. Coding agents can generate, refactor, and review code at a speed no individual developer can match. Much has been written about what this means for the market — the disruption of SaaS business models, the compression of software development costs, the reshaping of entire industries. That debate is important, but it is not the focus here. This is about the perspective of the developer: what it means for how you think, work, and take responsibility for what gets built.
 
@@ -14,6 +14,8 @@ This guide is neither a reaction to the slop loop movement nor a rejection of AI
 Deliberate Engineering works best in small enough teams where ownership is real, trust is earned, and analytical disposition is not just welcomed but required. This is not a coincidence. The approach demands capabilities and a process that were rarely incentivised before — the ability to reason about systems, question assumptions, direct agents precisely, and take full responsibility for what gets built. These are not skills or habits that frameworks or velocity metrics develop. They are the disposition this guide is written for.
 
 An agent given a vague instruction by a confused developer produces confident, fast, wrong code. Your job is increasingly to think clearly, plan deliberately, direct precisely, and review critically. The principles below are not just about writing code. They are about working effectively as the intelligence that guides and corrects the machine.
+
+There is a subtler version of this risk that the discourse rarely names. Cognitive capacity is finite. Every hour you spend on work an agent could do — mechanical synthesis, boilerplate, repetitive refactoring — is an hour not spent on hypothesis formation, design judgment, and architectural decisions. These aren't equivalent activities competing for the same slot; they're in direct competition for the same bounded resource. The developer who insists on doing commodity work manually isn't protecting quality — they're crowding out the cognitive work that actually determines it. Deliberate Engineering is in part an argument about where your attention goes.
 
 The difficulty is compounded by the discourse surrounding these tools. A steady drumbeat of AI executives and investors — many with undeclared financial stakes in adoption — produce emotionally manipulative, algorithmically optimized content: existential framing, identity threat, urgency dressed as public service. It is designed to go viral, and it does. Deliberate Engineering is in part a response to this: a reasoned position derived from principles, not a reaction to fear or hype. The developer who panics into the slop loop and the developer who retreats into sceptical rejection have both been moved by the same external force. Neither is thinking clearly.
 
@@ -49,7 +51,35 @@ Therefore: before instructing an agent, require it to demonstrate understanding 
 
 ---
 
-### 2. Form Hypotheses. Then Try to Break Them.
+### 2. Build the Dual Mental Model
+
+Understanding the problem is necessary. It isn't sufficient. You also need to understand how the agent will approach it — and those are two different things.
+
+Call this the **dual mental model**: the conjunction of task-level understanding and system-level understanding. Task-level is knowing what the correct solution looks like — the right data structure, the right algorithm, the right architectural pattern for the problem at hand. System-level is knowing how the agent selects its approach — and specifically, where it will default to the most probable response from its training distribution rather than the most appropriate response to your specific problem.
+
+This distinction matters because agents don't evaluate whether their chosen approach is sufficient. They produce what is most likely given the instruction. Give an agent a panel dataset and ask whether X affects Y, and it will apply fixed effects — because fixed effects is the overwhelmingly modal approach in the literature it was trained on. It won't ask whether fixed effects is enough. It won't notice the time-varying confounder. It will produce a well-structured, statistically detailed, confidently presented output. It will also be wrong.
+
+The developer with only task-level understanding — who knows the right approach but doesn't understand the agent's default behavior — may still write an underspecified instruction, assuming that identifying the problem is sufficient. It isn't. The agent must be told not just *what* to achieve, but *how* to achieve it, constrained at precisely the points where its defaults diverge from the correct approach. That constraint can only be applied by someone who understands both the task and the system.
+
+This has three practical implications. At instruction time: encode both your understanding of the problem and your understanding of the agent's defaults into the prompt — specify acceptance criteria, methodological constraints, the approach you want, and why. At review time: evaluate output not just against your expectation of what's correct, but against your knowledge of how the agent characteristically fails — plausible-but-wrong output is the failure mode to watch for, not obviously broken output. Between the two: monitor intermediate outputs for early divergence. A trajectory that has departed from the correct path at step two won't self-correct at step ten.
+
+The practical payoff of the dual mental model is instruction efficiency. The alternative — iterative prompting, trial-and-error refinement — can eventually converge on the right answer, but it requires the developer to recognize errors in intermediate outputs at every round, which itself presupposes the domain knowledge that would have enabled a precise instruction in the first place. Front-loading that knowledge into the instruction is faster, cheaper, and produces better results.
+
+*Knowing what the right answer looks like is not the same as knowing how the agent will miss it.*
+
+---
+
+### 3. Surface Confusion. Surface Tradeoffs.
+
+Unresolved ambiguity doesn't stay abstract. It gets implemented — by whoever acts next, often implicitly, often wrongly. In a human team, that's a colleague making a judgment call without the context to make it well. With an agent, it's faster and quieter: the agent fills the gap with whatever its training distribution makes most probable, not what your specific problem requires. By the time you see the output, the wrong decision is already baked in.
+
+So name the confusion. Say what you don't know — in a ticket, in a comment, to your team, in the instruction itself. Name the tradeoffs. Make the unknowns visible before they get decided for you. The instruction you write is the last point at which ambiguity is yours to resolve. After that, it belongs to the agent.
+
+*Clarity is your responsibility. Ambiguity doesn't disappear — it just gets delegated.*
+
+---
+
+### 4. Form Hypotheses. Then Try to Break Them.
 
 This is the scientific method applied to engineering. Before you touch anything — or hand anything to an agent — form an explicit hypothesis: a precise, stated belief about what is happening and why. Then do something Karl Popper would recognise: try to prove yourself wrong. You cannot confirm a hypothesis by finding evidence that supports it — you can only fail to disprove it. So actively look for the observation or experiment that would contradict it. What would have to be true for your explanation to be wrong? Run that test first.
 
@@ -59,7 +89,7 @@ This is how you fail fast usefully. A hypothesis that collapses under the first 
 
 ---
 
-### 3. Simplicity Is the Goal, Not the Compromise
+### 5. Simplicity Is the Goal, Not the Compromise
 
 You don't yet fully know what the solution needs to be — and this is not a weakness; it is the normal condition of any non-trivial problem with the minimal information set at the beginning of a trajectory. The same perspective that exposes enterprise framework over-commitment applies at the code level: investing in abstraction and generality before you understand the problem is the same mistake with a smaller blast radius. Start with the simplest thing that could possibly work — hard-code the config value, use the flat structure, skip the abstraction layer when only a single implementation is foreseeable — or if unavoidable, use the thinnest layer possible. Let the solution grow until its shape becomes clear through validated learning iterations, then decide how to structure it. Premature abstraction is just premature optimization with better vocabulary. The half-life of software is shorter than it has ever been, which means the cost of complexity you didn't need is increasingly likely to be paid in full and for nothing. Before you write — or before you start instructing — ask yourself as well as the agent: what is the simplest possible solution?
 
@@ -67,11 +97,9 @@ You don't yet fully know what the solution needs to be — and this is not a wea
 
 ---
 
-### 4. Your Code Is a Message to the Future
+### 6. Your Code Is a Message to the Future
 
-Principles 1 and 3 can be applied to the code itself.
-
-Principle 1 says: build a mental model before you act. Principle 3 says: keep complexity from accumulating silently. Principle 4 is looking at code from the reader's perspective — the person — or the agent instructed to extend it — who arrives at this code later, under pressure (human) or with not enough context (agent), and has to build that mental model from scratch.
+Principles 1 and 5 apply to the code itself. Principle 1 says: build a mental model before you act. Principle 5 says: keep complexity from accumulating silently. Now apply both from the reader's perspective — the person, or the agent instructed to extend this code, who arrives later under pressure (human) or without enough context (agent), and has to reconstruct that mental model from scratch.
 
 You are writing for that person — and possibly yourself. A clever solution that requires reverse-engineering your reasoning is not clever. A clear solution that makes the mental model obvious is the hard thing, and the right thing. Every unnecessary abstraction, every unexplained indirection, every piece of complexity that wasn't earned by necessity is cognitive load you are handing to someone else without their consent.
 
@@ -85,15 +113,7 @@ In short: clean code is about how code looks. Simple code is about how complexit
 
 ---
 
-### 5. Surface Confusion. Surface Tradeoffs.
-
-If you're confused, say so — to your team, in a ticket, in a comment. Unresolved ambiguity doesn't stay abstract; it gets decided by whoever acts next, often implicitly and wrongly. Name the tradeoffs. Make the unknowns visible. The same applies when working with agents: ambiguity in your instruction doesn't disappear, it gets implemented.
-
-*Clarity is your responsibility.*
-
----
-
-### 6. Leave It Better Than You Found It
+### 7. Leave It Better Than You Found It
 
 Let's end on a lighter note — this one is borrowed from the Boy Scouts: always leave the campsite better than you found it.
 
@@ -105,7 +125,7 @@ If you notice something small that can be cleaned up without risk, clean it up. 
 
 ## A Note on Origins
 
-The ideas here are a mix of things. Some may be original. Many have been shaped by years of working alongside great engineers on hard problems, and by conversations that border on philosophy as much as engineering. Some are independently convergent with recent public thinking from people like Andrej Karpathy, whose January 2026 observations on LLM coding behaviour articulate much of what practitioners have long felt; Armin Ronacher, whose writing on agent psychosis and the slop loop is essential reading; and the GitHub resource compiled by Forrest Chang distilling Karpathy's principles into practice. The simplicity imperative has deep roots — John Ousterhout's *A Philosophy of Software Design*, Dave Thomas and Andy Hunt's *The Pragmatic Programmer* (whose influence on how developers should think about their craft, not just their tools, runs through much of what is written here), and the Agile Manifesto's framing of simplicity as "maximizing the amount of work not done" are all ancestors of what is written here. This is not a claim of originality where none exists, but a synthesis from experience, shaped by these and others. This is my personal position. I hold it with conviction but not certainty — which, given Principle 2, seems appropriate.
+The ideas here are a mix of things. Some may be original. Many have been shaped by years of working alongside great engineers on hard problems, and by conversations that border on philosophy as much as engineering. Some are independently convergent with recent public thinking from people like Andrej Karpathy, whose January 2026 observations on LLM coding behaviour articulate much of what practitioners have long felt; Armin Ronacher, whose writing on agent psychosis and the slop loop is essential reading; and the GitHub resource compiled by Forrest Chang distilling Karpathy's principles into practice. The dual mental model — the conjunction of task-level and system-level understanding — is an original construct introduced in a companion working paper (Völkle, [*AI in Academic Research: Toward a Framework for Epistemically Responsible Deliberate Adoption*](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=6300178), 2026), where it is grounded in a controlled experiment demonstrating that instruction precision driven by domain knowledge is the binding constraint on AI output quality. The simplicity imperative has deep roots — John Ousterhout's *A Philosophy of Software Design*, Dave Thomas and Andy Hunt's *The Pragmatic Programmer* (whose influence on how developers should think about their craft, not just their tools, runs through much of what is written here), and the Agile Manifesto's framing of simplicity as "maximizing the amount of work not done" are all ancestors of what is written here. This is not a claim of originality where none exists, but a synthesis from experience, shaped by these and others. This is my personal position. I hold it with conviction but not certainty — which, given Principle 4, seems appropriate.
 
 In the same spirit as Hunt and Thomas, who paired *The Pragmatic Programmer*'s philosophy with concrete, tool-level practices — and Forrest Chang, whose GitHub resource distils Karpathy's principles into direct practitioner guidance — an `AGENTS.md` has been added to this repository. It translates these principles into instructions for coding agents directly, so the guide applies not just to how developers think, but to how they direct the tools they now work alongside. Consider it the deliberate alternative to the "get shit done and make assumptions" school of agent orchestration.
 
